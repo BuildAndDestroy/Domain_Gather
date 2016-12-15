@@ -171,6 +171,7 @@ while getopts 'pdsfaw' opt; do
             nmapDomainS
             nmapDomainA
             fierceDNS
+            wafw00fF
             ;;
     esac
 done
