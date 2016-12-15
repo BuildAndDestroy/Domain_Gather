@@ -13,6 +13,7 @@ if [ $# -eq 0 ]; then
     echo "-s    Nmap the A record, soft search."
     echo "-A    Nmap the A record, Aggressively."
     echo "-f    Fierce DNS attempt to extract zone file."
+    echo "-w    Detect WAF in front of webserver."
     echo "-a    Run all options. Time Consuming!"
     exit
 fi
@@ -127,6 +128,14 @@ function fierceDNS () {
     echo $(tput setaf 2)Complete!$(tput sgr0)
 }
 
+function wafw00fF () {
+    echo ''
+    BuildDirectory
+    echo wafw00f $domainName
+    wafw00f $domainName > /root/Hack/$domainName/wafw00f.txt
+    echo Output saved to /root/Hack/$domainName/wafw00f.txt
+    echo $(tput setaf 2)Complete!$(tput sgr0)
+}
 
 
 ###If no arg passed, don't ask for domain###
@@ -136,7 +145,7 @@ while [ $# -ne 0 ]; do
 done
 
 ###Switch Flags###
-while getopts 'pdsfa' opt; do
+while getopts 'pdsfaw' opt; do
     case $opt in
         p)
             allDNSRecordsToTerminal
@@ -152,6 +161,9 @@ while getopts 'pdsfa' opt; do
             ;;
         f)
             fierceDNS
+            ;;
+        w)
+            wafw00fF
             ;;
         a)
             allDNSRecordsToTerminal
