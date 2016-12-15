@@ -10,7 +10,8 @@ if [ $# -eq 0 ]; then
     echo Help Menu
     echo "-p    Print records to Terminal."
     echo "-d    Send Domain Records to a text file."
-    echo "-n    Nmap, the A record, soft and aggressively."
+    echo "-s    Nmap the A record, soft search."
+    echo "-A    Nmap the A record, Aggressively."
     echo "-f    Fierce DNS attempt to extract zone file."
     echo "-a    Run all options. Time Consuming!"
     exit
@@ -99,13 +100,19 @@ function DomainFileF () {
     echo $(tput setaf 2)Complete!$(tput sgr0)
 }
 
-function nmapDomain () {
+function nmapDomainS () {
     echo ''
     echo "nmap -sV $(ARecordF)"
     BuildDirectory
     nmap -sV $(ARecordF) > /root/Hack/$domainName/Simple_nmap.txt
     echo Output saved to /root/Hack/$domainName/Simple_nmap.txt
+    echo $(tput setaf 2)Complete!$(tput sgr0)
+}
+
+function nmapDomainA () {
+    echo ''
     echo "nmap -Pn -O -sV -A $(ARecordF)"
+    BuildDirectory
     nmap -Pn -O -sV -A $(ARecordF) > /root/Hack/$domainName/Aggressive_nmap.txt
     echo Output saved to /root/Hack/$domainName/Aggressive_nmap.txt
     echo $(tput setaf 2)Complete!$(tput sgr0)
@@ -129,26 +136,30 @@ while [ $# -ne 0 ]; do
 done
 
 ###Switch Flags###
-while getopts 'pdnfa' opt; do
+while getopts 'pdsfa' opt; do
     case $opt in
         p)
-	    allDNSRecordsToTerminal
-	    ;;
-	d)
+            allDNSRecordsToTerminal
+            ;;
+        d)
             DomainFileF
-	    ;;
-        n)
-	    nmapDomain
-	    ;;
-	f)
-	    fierceDNS
-	    ;;
-	a)
-	    allDNSRecordsToTerminal
-	    DomainFileF
-	    nmapDomain
+            ;;
+        s)
+            nmapDomainS
+            ;;
+        A)
+            nmapDomainA
+            ;;
+        f)
             fierceDNS
-	    ;;
+            ;;
+        a)
+            allDNSRecordsToTerminal
+            DomainFileF
+            nmapDomainS
+            nmapDomainA
+            fierceDNS
+            ;;
     esac
 done
 
